@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form @submit.prevent="onSave()" class="flex flex-col space-y-2 w-min border p-4 bg-gray-100">
+      <form @submit.prevent="onSave()" class="flex flex-col space-y-2 w-min border p-4 bg-gray-100">
         <div class="flex flex-col space-y-1">
           <label for="">Author name</label>
           <input class="px-2 py-1 w-min flex rounded border" v-model="editedPost.author" type="text" />
@@ -11,7 +11,7 @@
         </div>
         <div>
           <label for="">Thumbnail</label>
-          <input class="px-2 py-1 w-min flex rounded border" v-model="editedPost.thumbnailLink" type="text" />
+          <input class="px-2 py-1 w-min flex rounded border" v-model="editedPost.thumbnail" type="text" />
         </div>
         <div>
           <label for="">Content</label>
@@ -38,7 +38,7 @@ export default {
       editedPost: this.post ? { ...this.post } : {
         author: "",
         title: "",
-        thumbnailLink: "",
+        thumbnail: "",
         content: "",
       },
     };
@@ -46,6 +46,7 @@ export default {
   methods: {
     onSave() {
         console.log('save', this.editedPost);
+        this.$emit('submit', this.editedPost)
     },
     onCancel() {
         console.log('cancel');

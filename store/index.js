@@ -1,56 +1,55 @@
+import axios from "axios"
+
 export const state = () => ({
     loadedPosts: []
   })
   
 export const mutations = {
     setPosts(state, posts) {
-        state.loadedPosts = posts
+      state.loadedPosts = posts
+    },
+    addPost(state, post) {
+      state.loadedPosts.push(post)
+    },
+    editPost(state, editedPost) {
+      let postIndex = state.loadedPosts.findIndex(
+        post => post.id === editedPost.id
+      );
+      state.loadedPosts[postIndex] = editedPost
     }
 }
   
   export const actions = {
     nuxtServerInit(vuexContext, context) {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                vuexContext.commit('setPosts', [
-                  {
-                    id: "1",
-                    title: "The first post (ID: ",
-                    previewText: "This is preview",
-                    author: "Asgar",
-                    updatedDate: new Date(),
-                    content: "thi si icontent ha ha ha ",
-                    thumbnailLink:
-                      "https://images.unsplash.com/photo-1660405803327-c3cf599cbf1b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60",
-                  },
-                  {
-                    id: "2",
-                    title: "The first post (ID: ",
-                    previewText: "This is preview",
-                    author: "Asgar",
-                    updatedDate: new Date(),
-                    content: "thi si icontent ha ha ha ",
-                    thumbnailLink:
-                      "https://images.unsplash.com/photo-1660405803327-c3cf599cbf1b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60",
-                  },
-                  {
-                    id: "3",
-                    title: "The first post (ID: ",
-                    previewText: "This is preview",
-                    author: "Asgar",
-                    updatedDate: new Date(),
-                    content: "thi si icontent ha ha ha ",
-                    thumbnailLink:
-                      "https://images.unsplash.com/photo-1660405803327-c3cf599cbf1b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60",
-                  },
-                ])
-                resolve()
-            }, 1000);
-          })
+      return axios.get('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts.json')
+      .then(res => {
+        let postsArray = []
+        console.log('res.data', res.data);
+        for (let key in res.data) {
+          postsArray.push({ ...res.data[key], id: key })
+        }
+        console.log('postsArray', postsArray);
+        vuexContext.commit('setPosts', postsArray)
+      })
+      .catch(e => context.error(e))
     },
     setPosts({ commit }, posts){
       commit('setPosts', posts)
-    }
+    },
+    addPost(vuexContext, post) {
+      let createdPost = {
+        ...post,
+        updatedDate: new Date()
+      }
+      return axios.post('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts.json', createdPost)
+      .then(result => {
+        vuexContext.commit('addPost', {...createdPost, id: result.data.name })
+        // this.$router.push('/admin')
+        // console.log(result)
+      })
+      .catch(err => console.log(err))
+    },
+    editPost(vuexContext, post) {}
   }
 
   export const getters = {
