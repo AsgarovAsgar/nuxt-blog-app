@@ -9,28 +9,24 @@
       </div>
     </section>
     <section>
-      <img :src="loadedPost.thumbnailLink" alt="">
+      <img :src="loadedPost.thumbnail" alt="">
       <p>{{ loadedPost.content }}</p>
     </section>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  asyncData(context, callback) {
-    setTimeout(() => {
-      callback(null, {
-        loadedPost: {
-          id: '1',
-          title: 'The first post (ID: ' + context.params.id + ')',
-          previewText: 'This is preview',
-          author: 'Asgar',
-          updatedDate: new Date(),
-          content: 'thi si icontent ha ha ha ', 
-          thumbnailLink: 'https://images.unsplash.com/photo-1660405803327-c3cf599cbf1b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60'
-        }
-      })
-    }, 1000)
+  asyncData(context) {
+    return axios.get('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts/' + context.params.id + '.json')
+    .then(res => {
+      return {
+        loadedPost: res.data
+      }
+    })
+    .catch(e => context.error(e))
   }
 }
 </script>

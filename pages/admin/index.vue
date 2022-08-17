@@ -5,18 +5,24 @@
     </section>
     <section id="existing-post">
       <h2>Already posted</h2>
-      <PostList isAdmin/>
+      <PostList isAdmin :posts="loadedPosts" />
     </section>
   </div>
 </template>
 
 <script>
 import PostList from '~/components/Posts/PostList.vue'
+import axios from 'axios'
 
 export default {
   layout: 'admin',
   components: {
     PostList
+  },
+  computed: {
+    loadedPosts() {
+      return this.$store.getters.loadedPosts
+    }
   }
 }
 </script>
