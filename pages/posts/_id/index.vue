@@ -5,7 +5,7 @@
       <p>Preview: {{ loadedPost.previewText }}</p>
       <div>
         <p>Author: {{ loadedPost.author }}</p>
-        <p>Created on: {{ loadedPost.updatedDate }}</p>
+        <p>Created on: {{ loadedPost.updatedDate | date }}</p>
       </div>
     </section>
     <section>
@@ -20,7 +20,8 @@ import axios from 'axios'
 
 export default {
   asyncData(context) {
-    return axios.get('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts/' + context.params.id + '.json')
+    // console.log('baseUrl', context.$config.baseUrl);
+    return axios.get(context.$config.baseUrl + '/posts/' + context.params.id + '.json')
     .then(res => {
       return {
         loadedPost: res.data

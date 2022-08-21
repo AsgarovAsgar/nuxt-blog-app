@@ -23,6 +23,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/core-components.js' },
+    { src: '~/plugins/date-filter.js' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -45,5 +47,8 @@ export default {
         autoprefixer: {},
       },
     },
+  },
+  publicRuntimeConfig: {
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-app-28805-default-rtdb.firebaseio.com'
   }
 }

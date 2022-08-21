@@ -21,14 +21,14 @@ export const mutations = {
   
   export const actions = {
     nuxtServerInit(vuexContext, context) {
-      return axios.get('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts.json')
+      return axios.get(context.$config.baseUrl + '/posts.json')
       .then(res => {
         let postsArray = []
-        console.log('res.data', res.data);
+        // console.log('res.data', res.data);
         for (let key in res.data) {
           postsArray.push({ ...res.data[key], id: key })
         }
-        console.log('postsArray', postsArray);
+        // console.log('postsArray', postsArray);
         vuexContext.commit('setPosts', postsArray)
       })
       .catch(e => context.error(e))
@@ -49,7 +49,13 @@ export const mutations = {
       })
       .catch(err => console.log(err))
     },
-    editPost(vuexContext, post) {}
+    editPost(vuexContext, editedPost) {
+      return axios.put('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts/' + editedPost.id + '.json', editedPost)
+      .then(res => {
+        vuexContext.commit('editPost', editedPost)
+      })
+      .catch(err => console.log(err))
+    }
   }
 
   export const getters = {

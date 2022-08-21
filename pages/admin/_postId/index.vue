@@ -16,7 +16,7 @@ export default {
   },
   layout: 'admin',
   asyncData(context) {
-    return axios.get('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts/' + context.params.postId + '.json')
+    return axios.get(context.$config.baseUrl + '/posts/' + context.params.postId + '.json')
     .then(res => {
       return {
         loadedPost: {...res.data, id: context.params.postId}
