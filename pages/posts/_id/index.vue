@@ -19,12 +19,15 @@
 import axios from 'axios'
 
 export default {
+  // we cannot use this. in asyncData, because it works before the page load!
+  // when we use axious module, it return data directly, instead of response, if you want to reach out response, use standard axios
+  // the standard axios has been used in admin/_postId page
   asyncData(context) {
-    // console.log('baseUrl', context.$config.baseUrl);
-    return axios.get(context.$config.baseUrl + '/posts/' + context.params.id + '.json')
-    .then(res => {
+    // console.log('context', context);
+    return context.$axios.$get(context.$config.baseUrl + '/posts/' + context.params.id + '.json')
+    .then(data => {
       return {
-        loadedPost: res.data
+        loadedPost: data
       }
     })
     .catch(e => context.error(e))

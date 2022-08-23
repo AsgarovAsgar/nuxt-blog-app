@@ -45,11 +45,11 @@ export default {
   },
   methods: {
     onSave() {
-        console.log('save', this.editedPost);
+        // console.log('save', this.editedPost);
         this.$emit('submit', this.editedPost)
     },
     onCancel() {
-        console.log('cancel');
+        // console.log('cancel');
         this.$router.push('/admin')
     }
   }

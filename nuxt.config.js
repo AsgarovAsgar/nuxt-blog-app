@@ -36,8 +36,11 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-  ],
+  modules: ['@nuxtjs/axios'],
+
+  axios: {
+    baseURL: process.env.BASE_URL || 'https://nuxt-blog-app-28805-default-rtdb.firebaseio.com',
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
@@ -49,6 +52,9 @@ export default {
     },
   },
   publicRuntimeConfig: {
-    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-app-28805-default-rtdb.firebaseio.com'
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-app-28805-default-rtdb.firebaseio.com',
+    axios: {
+      browserBaseURL: process.env.BASE_URL || 'https://nuxt-blog-app-28805-default-rtdb.firebaseio.com'
+    }
   }
 }
