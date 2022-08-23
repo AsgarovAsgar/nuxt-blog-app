@@ -15,6 +15,8 @@ export default {
     AdminPostForm
   },
   layout: 'admin',
+  // I did not use axios nuxt module in this component in order to know how both way work
+  // If you want to see axios module, go to posts/_id page
   asyncData(context) {
     return axios.get(context.$config.baseUrl + '/posts/' + context.params.postId + '.json')
     .then(res => {

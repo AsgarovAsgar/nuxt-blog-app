@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     onSubmitted(postData) {
-      console.log('postData', postData);
+      // console.log('postData', postData);
       this.$store.dispatch('addPost', postData)
       .then(() => {
         this.$router.push('/admin')

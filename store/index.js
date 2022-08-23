@@ -21,12 +21,14 @@ export const mutations = {
   
   export const actions = {
     nuxtServerInit(vuexContext, context) {
-      return axios.get(context.$config.baseUrl + '/posts.json')
-      .then(res => {
+      console.log('context', context.$config);
+      return context.$axios.$get('/posts.json')
+      // if we call data using $axios.$get we use full functionality of axios module, so we don't need to write baseUrl
+      .then(data => {
         let postsArray = []
         // console.log('res.data', res.data);
-        for (let key in res.data) {
-          postsArray.push({ ...res.data[key], id: key })
+        for (let key in data) {
+          postsArray.push({ ...data[key], id: key })
         }
         // console.log('postsArray', postsArray);
         vuexContext.commit('setPosts', postsArray)
@@ -41,7 +43,7 @@ export const mutations = {
         ...post,
         updatedDate: new Date()
       }
-      return axios.post('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts.json', createdPost)
+      return this.axios.post(this.$config.axios.baseURL + '/posts.json', createdPost)
       .then(result => {
         vuexContext.commit('addPost', {...createdPost, id: result.data.name })
         // this.$router.push('/admin')
@@ -50,7 +52,8 @@ export const mutations = {
       .catch(err => console.log(err))
     },
     editPost(vuexContext, editedPost) {
-      return axios.put('https://nuxt-blog-app-28805-default-rtdb.firebaseio.com/posts/' + editedPost.id + '.json', editedPost)
+      return this.$axios.put(this.$config.axios.baseURL + editedPost.id + '.json', editedPost)
+      // this is modern way to call axios. just add base url into the runtimeconfig.axios object 
       .then(res => {
         vuexContext.commit('editPost', editedPost)
       })
