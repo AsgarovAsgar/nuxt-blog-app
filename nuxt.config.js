@@ -55,6 +55,7 @@ export default {
     baseUrl: process.env.BASE_URL || 'https://nuxt-blog-app-28805-default-rtdb.firebaseio.com',
     axios: {
       browserBaseURL: process.env.BASE_URL || 'https://nuxt-blog-app-28805-default-rtdb.firebaseio.com'
-    }
+    },
+    fbWebApiKey: process.env.FB_WEB_API_KEY || 'AIzaSyAejaN9Oyf9EnTmND30bgfrIVJvaMPIAew'
   }
 }
