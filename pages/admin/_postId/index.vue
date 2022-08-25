@@ -15,7 +15,7 @@ export default {
     AdminPostForm
   },
   layout: 'admin',
-  middleware: 'authenticated',
+  middleware: ['check-auth', 'authenticated'],
   // I did not use axios nuxt module in this component in order to know how both way work
   // If you want to see axios module, go to posts/_id page
   asyncData(context) {

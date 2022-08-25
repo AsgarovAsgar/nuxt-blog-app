@@ -1,4 +1,5 @@
 import axios from "axios"
+import Cookies from "js-cookie"
 
 export const state = () => ({
     loadedPosts: [],
@@ -82,16 +83,47 @@ export const mutations = {
       .then(result => {
         console.log('result: ', result);
         vuexContext.commit('setToken', result.idToken)
-        vuexContext.dispatch('setLogoutTimer', result.expiresIn * 1000)
+
+        // In order to save user, we store idToken on localStorage
+        // we set expiration time for logging out user when token expires
+        localStorage.setItem('token', result.idToken)
+        localStorage.setItem('tokenExpiration', new Date().getTime() + Number.parseInt(result.expiresIn) * 1000)
+
+        Cookies.set('jwt', result.idToken)
+        Cookies.set('expirationDate', new Date().getTime() + Number.parseInt(result.expiresIn) * 1000)
+
       })
       .catch(error => {
         console.log(error);
       })
     },
-    setLogoutTimer(vuexContext, duration) {
-      setTimeout(() => {
+    initAuth(vuexContext, req) {
+      let token
+      let expirationDate
+      if(req) {
+        if(!req.headers.cookie) {
+          return
+        }
+        const jwtCookie = req.headers.cookie.split(';').find(c => c.trim().startsWith('jwt='))
+        if(!jwtCookie) {
+          return
+        }
+        token = jwtCookie.split('=')[1]
+
+        expirationDate = req.headers.cookie.split(';').find(c => c.trim().startsWith('expirationDate='))
+        .split('=')[1]
+      } else {
+        token = localStorage.getItem('token')
+        expirationDate = localStorage.getItem('tokenExpiration')
+      }
+      // eger indiki vaxt tokenin bitme tarixin kecibse ve ya token hec set olmayibsa
+      if(new Date().getTime() > +expirationDate || !token) {
+        console.log('no token or invalid token');
         vuexContext.commit('clearToken')
-      }, duration);
+        return
+      }
+
+      vuexContext.commit('setToken', token)
     }
   }
 
