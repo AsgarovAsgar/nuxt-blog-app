@@ -119,11 +119,23 @@ export const mutations = {
       // eger indiki vaxt tokenin bitme tarixin kecibse ve ya token hec set olmayibsa
       if(new Date().getTime() > +expirationDate || !token) {
         console.log('no token or invalid token');
-        vuexContext.commit('clearToken')
+        vuexContext.dispatch('logout')
+        // vuexContext.commit('clearToken')
         return
       }
 
       vuexContext.commit('setToken', token)
+    },
+    logout(vuexContext) {
+      vuexContext.commit('clearToken')
+
+      Cookies.remove('token')
+      Cookies.remove('expirationDate')
+
+      if(process.client) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('tokenExpiration')
+      }
     }
   }
 
